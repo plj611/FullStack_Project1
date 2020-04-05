@@ -57,7 +57,8 @@ class Venue(db.Model):
     website = db.Column(db.String(120))
     seeking_talent = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(500))
-    genres = db.relationship('Genres', secondary=venue_genres, backref=db.backref('venues', lazy=True))
+    #genres = db.relationship('Genres', secondary=venue_genres, backref=db.backref('venues', lazy=True))
+    genres = db.Column(db.String(200))
 
     show = db.relationship('Show', backref='venue', lazy=True)
 
@@ -92,7 +93,8 @@ class Artist(db.Model):
     seeking_venue = db.Column(db.Boolean, default=False)
     seeking_description = db.Column(db.String(500))
 #    genres = db.relationship('Genres1', secondary=artist_genres, backref=db.backref('artist', lazy=True))
-    genres = db.relationship('Genres', secondary=artist_genres, backref=db.backref('artist', lazy=True))
+    #genres = db.relationship('Genres', secondary=artist_genres, backref=db.backref('artist', lazy=True))
+    genres = db.Column(db.String(200))
 
     show = db.relationship('Show', backref='artist', lazy=True)
 
@@ -311,6 +313,10 @@ def show_venue(venue_id):
     "past_shows_count": 1,
     "upcoming_shows_count": 1,
   }
+
+  # Raise error if no venue_id
+
+
   data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
   return render_template('pages/show_venue.html', venue=data)
 
