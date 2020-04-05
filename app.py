@@ -14,6 +14,7 @@ from logging import Formatter, FileHandler
 from flask_wtf import Form
 from forms import *
 from flask_migrate import Migrate
+import datetime
 
 #----------------------------------------------------------------------------#
 # App Config.
@@ -315,9 +316,58 @@ def show_venue(venue_id):
   }
 
   # Raise error if no venue_id
+  try:
+    result = Venue.query.filter(Venue.id == venue_id).outerjoin(Show, Show.venue_id == Venue.id).all()
+  except:
+    abort(500)
+  
+  if not result:
+    abort(404)
+  else:
+    print(result)
+    formatted_result = {
+              'id': result[0].id,
+              'name': result[0].name,
+              'genres': [],
+              'address': result[0].address,
+              'city': result[0].city,
+              'state': result[0].state,
+              'phone': result[0].phone,
+              'website': result[0].website,
+              'facebook_link': result[0].facebook_link,
+              'seeking_talent': result[0].seeking_talent,
+              'image_link': result[0].image_link,
+              'past_shows': [],
+              'upcoming_shows': [],
+              'past_shows_count': 0,
+              'upcoming_shows_count': 0
+    }
+    for show in result[0].show:
+      if show.artist:
+        #print(show.artist)
+        #input('stop')
+        now = datetime.datetime.now()
+        if show.start_time <= now:
+          formatted_result['past_shows'].append({
+                                'artist_id': show.artist.id,
+                                'artist_name': show.artist.name,
+                                'artist_image_link': show.artist.image_link,
+                                'start_time': str(show.start_time)
+          })
+        else:
+          formatted_result['upcoming_shows'].append({
+                                'artist_id': show.artist.id,
+                                'artist_name': show.artist.name,
+                                'artist_image_link': show.artist.image_link,
+                                'start_time': str(show.start_time)
+          })
+    formatted_result['past_shows_count'] = len(formatted_result['past_shows'])
+    formatted_result['upcoming_shows_count'] = len(formatted_result['upcoming_shows'])
 
-
-  data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
+  #print(formatted_result)
+  #input('aaaa')
+  #data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
+  data = formatted_result
   return render_template('pages/show_venue.html', venue=data)
 
 #  Create Venue
