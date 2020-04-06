@@ -438,6 +438,15 @@ def artists():
     "id": 6,
     "name": "The Wild Sax Band",
   }]
+  try:
+    results = Artist.query.all()
+  except:
+    abort(500)
+
+  formatted_result = []
+  for artist in results:
+    formatted_result.append({'id': artist.id, 'name': artist.name})
+  data = formatted_result
   return render_template('pages/artists.html', artists=data)
 
 @app.route('/artists/search', methods=['POST'])
