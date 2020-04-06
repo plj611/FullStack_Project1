@@ -634,7 +634,6 @@ def show_artist(artist_id):
 #  ----------------------------------------------------------------
 @app.route('/artists/<int:artist_id>/edit', methods=['GET'])
 def edit_artist(artist_id):
-  form = ArtistForm()
   artist={
     "id": 4,
     "name": "Guns N Petals",
@@ -649,7 +648,35 @@ def edit_artist(artist_id):
     "image_link": "https://images.unsplash.com/photo-1549213783-8284d0336c4f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=300&q=80"
   }
   # TODO: populate form with fields from artist with ID <artist_id>
-  return render_template('forms/edit_artist.html', form=form, artist=artist)
+
+  try:
+    artist = Artist.query.filter(Artist.id == artist_id).all()[0]
+  except:
+    abort(500)
+
+  if artist:
+    formatted_result = {
+          'id': artist.id,
+          'name': artist.name,
+          'genres': artist.genres.split('-'),
+          'city': artist.city,
+          'state': artist.state,
+          'phone': artist.phone,
+          'website': artist.website,
+          'facebook_link': artist.facebook_link,
+          'seeking_venue': artist.seeking_venue, 
+          'seeking_description': artist.seeking_description,
+          'image_link': artist.image_link
+    }
+  else:
+    abort(404)
+  form = ArtistForm(name=formatted_result['name'], 
+                    state=formatted_result['state'], 
+                    phone=formatted_result['phone'],
+                    genres=formatted_result['genres'],
+                    facebook_link=formatted_result['facebook_link']
+                    )
+  return render_template('forms/edit_artist.html', form=form, artist=formatted_result)
 
 @app.route('/artists/<int:artist_id>/edit', methods=['POST'])
 def edit_artist_submission(artist_id):
