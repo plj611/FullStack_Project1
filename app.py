@@ -671,6 +671,7 @@ def edit_artist(artist_id):
   else:
     abort(404)
   form = ArtistForm(name=formatted_result['name'], 
+                    city=formatted_result['city'],
                     state=formatted_result['state'], 
                     phone=formatted_result['phone'],
                     genres=formatted_result['genres'],
