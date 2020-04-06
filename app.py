@@ -462,6 +462,28 @@ def search_artists():
       "num_upcoming_shows": 0,
     }]
   }
+  search_term = request.form['search_term']
+  results = Artist.query.filter(Artist.name.ilike(f'%{search_term}%')).outerjoin(Show, Artist.id == Show.artist_id).all()
+  #print(results)
+  #input('stop')
+  formatted_result = {
+        'count': len(results),
+        'data': []
+  }
+  now = datetime.datetime.now()
+  for artist in results:
+    upcoming_show = 0
+    for show in artist.show:
+      if show.venue:
+        if show.start_time > now:
+          upcoming_show = upcoming_show + 1
+    formatted_result['data'].append({
+                                    'id': artist.id,
+                                    'name': artist.name,
+                                    'num_upcoming_shows': upcoming_show})
+  #print(formatted_result)
+  #input('stop')
+  response = formatted_result
   return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
 @app.route('/artists/<int:artist_id>')
