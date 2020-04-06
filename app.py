@@ -224,12 +224,19 @@ def search_venues():
         'count': len(results),
         'data': []
   }
+  now = datetime.datetime.now()
   for venue in results:
+    upcoming_show = 0
+    for show in venue.show:
+      if show.artist:
+        if show.start_time > now:
+          upcoming_show = upcoming_show + 1
     formatted_result['data'].append({
                                     'id': venue.id,
                                     'name': venue.name,
-                                    'num_upcoming_shows': len(venue.show)})
-  print(formatted_result)
+                                    'num_upcoming_shows': upcoming_show})
+  #print(formatted_result)
+  #input('stop')
   response = formatted_result
   return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
