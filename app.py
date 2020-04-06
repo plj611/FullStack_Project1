@@ -575,7 +575,59 @@ def show_artist(artist_id):
     "past_shows_count": 0,
     "upcoming_shows_count": 3,
   }
+  try:
+    result = Artist.query.filter(Artist.id == artist_id).outerjoin(Show, Show.artist_id == Artist.id).all()
+  except:
+    abort(500)
+
+  if not result:
+    abort(404)
+  else:
+    print(result)
+    formatted_result = {
+              'id': result[0].id,
+              'name': result[0].name,
+              'genres': result[0].genres.split('-'),
+              'city': result[0].city,
+              'state': result[0].state,
+              'phone': result[0].phone,
+              'website': result[0].website,
+              'facebook_link': result[0].facebook_link,
+              'seeking_venue': result[0].seeking_venue,
+              'seeking_description': result[0].seeking_description,
+              'image_link': result[0].image_link,
+              'past_shows': [],
+              'upcoming_shows': [],
+              'past_shows_count': 0,
+              'upcoming_shows_count': 0
+    }
+    for show in result[0].show:
+      if show.venue:
+        #print(show.venue)
+        #input('stop')
+        now = datetime.datetime.now()
+        if show.start_time <= now:
+          formatted_result['past_shows'].append({
+                                'venue_id': show.venue.id,
+                                'venue_name': show.venue.name,
+                                'venue_image_link': show.venue.image_link,
+                                'start_time': str(show.start_time)
+          })
+        else:
+          formatted_result['upcoming_shows'].append({
+                                'venue_id': show.venue.id,
+                                'venue_name': show.venue.name,
+                                'venue_image_link': show.venue.image_link,
+                                'start_time': str(show.start_time)
+          })
+    formatted_result['past_shows_count'] = len(formatted_result['past_shows'])
+    formatted_result['upcoming_shows_count'] = len(formatted_result['upcoming_shows'])
+
+
+  #print(formatted_result)
+  #input('stop')
   data = list(filter(lambda d: d['id'] == artist_id, [data1, data2, data3]))[0]
+  data = formatted_result
   return render_template('pages/show_artist.html', artist=data)
 
 #  Update
