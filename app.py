@@ -176,6 +176,7 @@ def venues():
   if results:
     iter_results = iter(results)
     rec = next(iter_results)
+    now = datetime.datetime.now()
     while not empty:
       city = rec.city
       state = rec.state
@@ -185,10 +186,15 @@ def venues():
               "venues": []
       }
       while empty == False and city == rec.city and state == rec.state:
+        upcoming_show = 0
+        for show in rec.show:
+          if show.artist:
+            if show.start_time > now:
+              upcoming_show = upcoming_show + 1
         tmp["venues"].append({
                               "id": rec.id,
                               "name": rec.name,
-                              "num_upcoming_shows": len(rec.show)
+                              "num_upcoming_shows": upcoming_show
         })
         try:
           #print(rec.id)
@@ -200,7 +206,8 @@ def venues():
 
       formatted_result.append(tmp)
 
-  print(formatted_result)
+  #print(formatted_result)
+  #input('stop')
   data = formatted_result
   return render_template('pages/venues.html', areas=data)
 
