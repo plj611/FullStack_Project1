@@ -885,10 +885,44 @@ def create_show_submission():
   # TODO: insert form data as a new Show record in the db, instead
 
   # on successful db insert, flash success
-  flash('Show was successfully listed!')
   # TODO: on unsuccessful db insert, flash an error instead.
   # e.g., flash('An error occurred. Show could not be listed.')
   # see: http://flask.pocoo.org/docs/1.0/patterns/flashing/
+  
+  artist_id = request.form['artist_id']
+  venue_id = request.form['venue_id']
+  start_time = request.form['start_time']
+  #input('stop')
+  #print(f'{artist_id} {venue_id} {start_time}')
+
+  try:
+    artist_id = int(artist_id)
+    venue_id = int(venue_id)
+    start_time = datetime.datetime.strptime(start_time, '%Y-%m-%d %H:%M:%S')
+  except:
+    flash('An error occurred. Show could not be listed') 
+
+  try:
+    artist = Artist.query.filter(Artist.id == artist_id).all()
+  except:
+    abort(500)
+
+  try:
+    venue = Venue.query.filter(Venue.id == venue_id).all()
+  except:
+    abort(500)
+
+  if artist and venue:
+    try:
+      show = Show(artist_id=artist_id, venue_id=venue_id, start_time=start_time)
+      db.session.add(show)
+      db.session.commit()
+      flash('Show was successfully listed!')
+    except:
+      flash('An error occurred. Show could not be listed') 
+  else:
+    abort(404)
+
   return render_template('pages/home.html')
 
 @app.errorhandler(404)
