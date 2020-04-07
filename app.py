@@ -851,7 +851,27 @@ def shows():
     "artist_image_link": "https://images.unsplash.com/photo-1558369981-f9ca78462e61?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=794&q=80",
     "start_time": "2035-04-15T20:00:00.000Z"
   }]
-  return render_template('pages/shows.html', shows=data)
+
+  try:
+    shows = Show.query.all()
+  except:
+    abort(500)
+
+  formatted_result = []
+  if shows:
+    for show in shows:
+      if show.venue_id and show.artist_id:
+        formatted_result.append({
+                  'venue_id': show.venue_id,
+                  'venue_name': show.venue.name,
+                  'artist_id': show.artist_id,
+                  'artist_name': show.artist.name,
+                  'artist_image_link': show.artist.image_link,
+                  'start_time': str(show.start_time)
+        })      
+  #print(formatted_result)
+  #input('stop')
+  return render_template('pages/shows.html', shows=formatted_result)
 
 @app.route('/shows/create')
 def create_shows():
