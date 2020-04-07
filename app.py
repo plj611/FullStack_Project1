@@ -708,7 +708,6 @@ def edit_artist_submission(artist_id):
 
 @app.route('/venues/<int:venue_id>/edit', methods=['GET'])
 def edit_venue(venue_id):
-  form = VenueForm()
   venue={
     "id": 1,
     "name": "The Musical Hop",
@@ -724,7 +723,40 @@ def edit_venue(venue_id):
     "image_link": "https://images.unsplash.com/photo-1543900694-133f37abaaa5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60"
   }
   # TODO: populate form with values from venue with ID <venue_id>
-  return render_template('forms/edit_venue.html', form=form, venue=venue)
+
+  try:
+    venue = Venue.query.filter(Venue.id == venue_id).all()[0]
+  except:
+    abort(500)
+
+  if venue:
+    formatted_result = {
+          'id': venue.id,
+          'name': venue.name,
+          'genres': venue.genres.split(','),
+          'address': venue.address,
+          'city': venue.city,
+          'state': venue.state,
+          'phone': venue.phone,
+          'website': venue.website,
+          'facebook_link': venue.facebook_link,
+          'seeking_talent': venue.seeking_talent,
+          'seeking_description': venue.seeking_description,
+          'image_link': venue.image_link
+    }
+  else:
+    abort(404)
+
+  form = VenueForm(name=formatted_result['name'],
+                   city=formatted_result['city'],
+                   state=formatted_result['state'],
+                   address=formatted_result['address'],
+                   phone=formatted_result['phone'],
+                   genres=formatted_result['genres'],
+                   facebook_link=formatted_result['facebook_link']
+                   )
+
+  return render_template('forms/edit_venue.html', form=form, venue=formatted_result)
 
 @app.route('/venues/<int:venue_id>/edit', methods=['POST'])
 def edit_venue_submission(venue_id):
