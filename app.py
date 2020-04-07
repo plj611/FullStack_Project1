@@ -342,7 +342,7 @@ def show_venue(venue_id):
     formatted_result = {
               'id': result[0].id,
               'name': result[0].name,
-              'genres': [],
+              'genres': result[0].genres.split(','),
               'address': result[0].address,
               'city': result[0].city,
               'state': result[0].state,
@@ -379,7 +379,7 @@ def show_venue(venue_id):
     formatted_result['upcoming_shows_count'] = len(formatted_result['upcoming_shows'])
 
   #print(formatted_result)
-  #input('aaaa')
+  #input('stop')
   #data = list(filter(lambda d: d['id'] == venue_id, [data1, data2, data3]))[0]
   data = formatted_result
   return render_template('pages/show_venue.html', venue=data)
@@ -413,7 +413,7 @@ def create_venue_submission():
                   state = state,
                   address = address,
                   phone = phone,
-                  genres = '-'.join(genres),
+                  genres = ','.join(genres),
                   facebook_link = facebook_link)
     db.session.add(venue)
     db.session.commit()
@@ -587,7 +587,7 @@ def show_artist(artist_id):
     formatted_result = {
               'id': result[0].id,
               'name': result[0].name,
-              'genres': result[0].genres.split('-'),
+              'genres': result[0].genres.split(','),
               'city': result[0].city,
               'state': result[0].state,
               'phone': result[0].phone,
@@ -658,7 +658,7 @@ def edit_artist(artist_id):
     formatted_result = {
           'id': artist.id,
           'name': artist.name,
-          'genres': artist.genres.split('-'),
+          'genres': artist.genres.split(','),
           'city': artist.city,
           'state': artist.state,
           'phone': artist.phone,
@@ -694,7 +694,7 @@ def edit_artist_submission(artist_id):
     artist.city = request.form['city']
     artist.state = request.form['state']
     artist.phone = request.form['phone']
-    artist.genres = '-'.join(request.form.getlist('genres'))
+    artist.genres = ','.join(request.form.getlist('genres'))
     artist.facebook_link = request.form['facebook_link']
   else:
     abort(404)
