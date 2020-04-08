@@ -350,6 +350,7 @@ def show_venue(venue_id):
               'website': result[0].website,
               'facebook_link': result[0].facebook_link,
               'seeking_talent': result[0].seeking_talent,
+              'seeking_description': result[0].seeking_description,
               'image_link': result[0].image_link,
               'past_shows': [],
               'upcoming_shows': [],
@@ -435,6 +436,9 @@ def delete_venue(venue_id):
 
   # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
   # clicking that button delete it from the db then redirect the user to the homepage
+  print(venue_id)
+  input('hello')
+
   return None
 
 #  Artists
