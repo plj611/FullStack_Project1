@@ -338,7 +338,7 @@ def show_venue(venue_id):
   if not result:
     abort(404)
   else:
-    print(result)
+    #print(result)
     formatted_result = {
               'id': result[0].id,
               'name': result[0].name,
@@ -436,10 +436,28 @@ def delete_venue(venue_id):
 
   # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
   # clicking that button delete it from the db then redirect the user to the homepage
-  print(venue_id)
-  input('hello')
+  #print(venue_id)
+  #input('hello')
+  try:
+    venue = Venue.query.filter(Venue.id == venue_id).all()
+  except:
+    abort(500)
+  
+  if venue:
+    try:
+      name = venue[0].name
+      print(name)
+      db.session.delete(venue[0])
+      db.session.commit()
+      #flash('Venue was successfully deleted!')
+    except:
+      abort(500)
+  else:
+    abort(404)
 
-  return None
+  #print('render')
+  #return None
+  return render_template('pages/home.html')
 
 #  Artists
 #  ----------------------------------------------------------------
