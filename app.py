@@ -380,9 +380,6 @@ def create_venue_submission():
   genres = request.form.getlist('genres')
   facebook_link = request.form['facebook_link']
 
-  #print(f'{name} {city} {state} {address} {phone} {genres} {facebook_link}')
-  #input('stop')
-
   try:
     venue = Venue(name = name,
                   city = city,
