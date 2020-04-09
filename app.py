@@ -652,7 +652,7 @@ def edit_artist(artist_id):
     formatted_result = {
           'id': artist.id,
           'name': artist.name,
-          'genres': artist.genres.split(','),
+          'genres': artist.genres.split(',') if artist.genres else [],
           'city': artist.city,
           'state': artist.state,
           'phone': artist.phone,
