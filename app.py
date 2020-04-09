@@ -408,8 +408,6 @@ def delete_venue(venue_id):
 
   # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
   # clicking that button delete it from the db then redirect the user to the homepage
-  #print(venue_id)
-  #input('hello')
   try:
     venue = Venue.query.filter(Venue.id == venue_id).all()
   except:
@@ -421,13 +419,11 @@ def delete_venue(venue_id):
       print(name)
       db.session.delete(venue[0])
       db.session.commit()
-      #flash('Venue was successfully deleted!')
     except:
       abort(500)
   else:
     abort(404)
 
-  #print('render')
   #return None
   return render_template('pages/home.html')
 
