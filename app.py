@@ -486,6 +486,8 @@ def search_artists():
         'count': 0,
         'data': []
   }
+
+  # check for valid search_term
   if search_term and not search_term.isspace():
     results = Artist.query.filter(Artist.name.ilike(f'%{search_term}%')).outerjoin(Show, Artist.id == Show.artist_id).all()
     formatted_result = {
