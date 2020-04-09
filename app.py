@@ -908,8 +908,6 @@ def create_show_submission():
   artist_id = request.form['artist_id']
   venue_id = request.form['venue_id']
   start_time = request.form['start_time']
-  #input('stop')
-  #print(f'{artist_id} {venue_id} {start_time}')
 
   try:
     artist_id = int(artist_id)
