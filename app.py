@@ -211,6 +211,7 @@ def search_venues():
         'data': []
   }
 
+  # check for a valid search_term 
   if search_term and not search_term.isspace():
     results = Venue.query.filter(Venue.name.ilike(f'%{search_term}%')).outerjoin(Show, Venue.id == Show.venue_id).all()
     formatted_result = {
@@ -222,6 +223,8 @@ def search_venues():
       upcoming_show = 0
       for show in venue.show:
         if show.artist:
+
+          # count for upcoming_show
           if show.start_time > now:
             upcoming_show = upcoming_show + 1
       formatted_result['data'].append({
