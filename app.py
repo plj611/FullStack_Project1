@@ -758,6 +758,7 @@ def edit_venue(venue_id):
   else:
     abort(404)
 
+  # fill in the venue form
   form = VenueForm(name=formatted_result['name'],
                    city=formatted_result['city'],
                    state=formatted_result['state'],
