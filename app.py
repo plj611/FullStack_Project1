@@ -677,6 +677,8 @@ def edit_artist(artist_id):
     }
   else:
     abort(404)
+
+  # fill in the artist form
   form = ArtistForm(name=formatted_result['name'], 
                     city=formatted_result['city'],
                     state=formatted_result['state'], 
