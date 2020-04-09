@@ -470,8 +470,6 @@ def search_artists():
   }
   search_term = request.form['search_term']
   results = Artist.query.filter(Artist.name.ilike(f'%{search_term}%')).outerjoin(Show, Artist.id == Show.artist_id).all()
-  #print(results)
-  #input('stop')
   formatted_result = {
         'count': len(results),
         'data': []
@@ -487,8 +485,6 @@ def search_artists():
                                     'id': artist.id,
                                     'name': artist.name,
                                     'num_upcoming_shows': upcoming_show})
-  #print(formatted_result)
-  #input('stop')
   response = formatted_result
   return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
