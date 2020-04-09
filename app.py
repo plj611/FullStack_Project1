@@ -729,7 +729,7 @@ def edit_venue(venue_id):
     formatted_result = {
           'id': venue.id,
           'name': venue.name,
-          'genres': venue.genres.split(','),
+          'genres': venue.genres.split(',') if venue.genres else [],
           'address': venue.address,
           'city': venue.city,
           'state': venue.state,
