@@ -460,6 +460,7 @@ def search_artists():
   # TODO: implement search on artists with partial string search. Ensure it is case-insensitive.
   # seach for "A" should return "Guns N Petals", "Matt Quevado", and "The Wild Sax Band".
   # search for "band" should return "The Wild Sax Band".
+  '''
   response={
     "count": 1,
     "data": [{
@@ -468,23 +469,29 @@ def search_artists():
       "num_upcoming_shows": 0,
     }]
   }
+  '''
   search_term = request.form['search_term']
-  results = Artist.query.filter(Artist.name.ilike(f'%{search_term}%')).outerjoin(Show, Artist.id == Show.artist_id).all()
   formatted_result = {
-        'count': len(results),
+        'count': 0,
         'data': []
   }
-  now = datetime.datetime.now()
-  for artist in results:
-    upcoming_show = 0
-    for show in artist.show:
-      if show.venue:
-        if show.start_time > now:
-          upcoming_show = upcoming_show + 1
-    formatted_result['data'].append({
-                                    'id': artist.id,
-                                    'name': artist.name,
-                                    'num_upcoming_shows': upcoming_show})
+  if search_term and not search_term.isspace():
+    results = Artist.query.filter(Artist.name.ilike(f'%{search_term}%')).outerjoin(Show, Artist.id == Show.artist_id).all()
+    formatted_result = {
+          'count': len(results),
+          'data': []
+    }
+    now = datetime.datetime.now()
+    for artist in results:
+      upcoming_show = 0
+      for show in artist.show:
+        if show.venue:
+          if show.start_time > now:
+            upcoming_show = upcoming_show + 1
+      formatted_result['data'].append({
+                                      'id': artist.id,
+                                      'name': artist.name,
+                                      'num_upcoming_shows': upcoming_show})
   response = formatted_result
   return render_template('pages/search_artists.html', results=response, search_term=request.form.get('search_term', ''))
 
