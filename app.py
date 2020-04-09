@@ -925,6 +925,7 @@ def create_show_submission():
   venue_id = request.form['venue_id']
   start_time = request.form['start_time']
 
+  # check for valid inputs
   try:
     artist_id = int(artist_id)
     venue_id = int(venue_id)
@@ -932,11 +933,13 @@ def create_show_submission():
   except:
     flash('An error occurred. Show could not be listed') 
 
+  # check if artist exists
   try:
     artist = Artist.query.filter(Artist.id == artist_id).all()
   except:
     abort(500)
 
+  # check if venue exists
   try:
     venue = Venue.query.filter(Venue.id == venue_id).all()
   except:
