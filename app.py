@@ -417,6 +417,8 @@ def delete_venue(venue_id):
 
   # BONUS CHALLENGE: Implement a button to delete a Venue on a Venue Page, have it so that
   # clicking that button delete it from the db then redirect the user to the homepage
+
+  # AJAX code in show_venue.html to handle delete venue and redirect user to homepage
   try:
     venue = Venue.query.filter(Venue.id == venue_id).all()
   except:
