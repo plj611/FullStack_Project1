@@ -584,7 +584,7 @@ def show_artist(artist_id):
     formatted_result = {
               'id': result[0].id,
               'name': result[0].name,
-              'genres': result[0].genres.split(','),
+              'genres': result[0].genres.split(',') if result[0].genres else [],
               'city': result[0].city,
               'state': result[0].state,
               'phone': result[0].phone,
