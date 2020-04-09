@@ -200,22 +200,28 @@ def search_venues():
   '''
 
   search_term = request.form['search_term']
-  results = Venue.query.filter(Venue.name.ilike(f'%{search_term}%')).outerjoin(Show, Venue.id == Show.venue_id).all()
   formatted_result = {
-        'count': len(results),
+        'count': 0,
         'data': []
   }
-  now = datetime.datetime.now()
-  for venue in results:
-    upcoming_show = 0
-    for show in venue.show:
-      if show.artist:
-        if show.start_time > now:
-          upcoming_show = upcoming_show + 1
-    formatted_result['data'].append({
-                                    'id': venue.id,
-                                    'name': venue.name,
-                                    'num_upcoming_shows': upcoming_show})
+
+  if search_term and not search_term.isspace():
+    results = Venue.query.filter(Venue.name.ilike(f'%{search_term}%')).outerjoin(Show, Venue.id == Show.venue_id).all()
+    formatted_result = {
+          'count': len(results),
+          'data': []
+    }
+    now = datetime.datetime.now()
+    for venue in results:
+      upcoming_show = 0
+      for show in venue.show:
+        if show.artist:
+          if show.start_time > now:
+            upcoming_show = upcoming_show + 1
+      formatted_result['data'].append({
+                                      'id': venue.id,
+                                      'name': venue.name,
+                                      'num_upcoming_shows': upcoming_show})
   response = formatted_result
   return render_template('pages/search_venues.html', results=response, search_term=request.form.get('search_term', ''))
 
