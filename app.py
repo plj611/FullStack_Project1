@@ -119,6 +119,7 @@ def index():
 def venues():
   # TODO: replace with real venues data.
   #       num_shows should be aggregated based on number of upcoming shows per venue.
+  '''
   data=[{
     "city": "San Francisco",
     "state": "CA",
@@ -140,7 +141,7 @@ def venues():
       "num_upcoming_shows": 0,
     }]
   }]
-
+  '''
   try:
     results = Venue.query.outerjoin(Show, Venue.id == Show.venue_id).order_by(Venue.state, Venue.city).all()
   except:
@@ -172,17 +173,12 @@ def venues():
                               "num_upcoming_shows": upcoming_show
         })
         try:
-          #print(rec.id)
           rec = next(iter_results)
         except:
-          #print('end')
-          #input('aaaaaa')
           empty = True
 
       formatted_result.append(tmp)
 
-  #print(formatted_result)
-  #input('stop')
   data = formatted_result
   return render_template('pages/venues.html', areas=data)
 
