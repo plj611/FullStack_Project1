@@ -499,6 +499,7 @@ def search_artists():
 def show_artist(artist_id):
   # shows the venue page with the given venue_id
   # TODO: replace with real venue data from the venues table, using venue_id
+  '''
   data1={
     "id": 4,
     "name": "Guns N Petals",
@@ -570,6 +571,8 @@ def show_artist(artist_id):
     "past_shows_count": 0,
     "upcoming_shows_count": 3,
   }
+  '''
+
   try:
     result = Artist.query.filter(Artist.id == artist_id).outerjoin(Show, Show.artist_id == Artist.id).all()
   except:
@@ -578,7 +581,6 @@ def show_artist(artist_id):
   if not result:
     abort(404)
   else:
-    print(result)
     formatted_result = {
               'id': result[0].id,
               'name': result[0].name,
@@ -598,8 +600,6 @@ def show_artist(artist_id):
     }
     for show in result[0].show:
       if show.venue:
-        #print(show.venue)
-        #input('stop')
         now = datetime.datetime.now()
         if show.start_time <= now:
           formatted_result['past_shows'].append({
@@ -618,9 +618,6 @@ def show_artist(artist_id):
     formatted_result['past_shows_count'] = len(formatted_result['past_shows'])
     formatted_result['upcoming_shows_count'] = len(formatted_result['upcoming_shows'])
 
-
-  #print(formatted_result)
-  #input('stop')
   #data = list(filter(lambda d: d['id'] == artist_id, [data1, data2, data3]))[0]
   data = formatted_result
   return render_template('pages/show_artist.html', artist=data)
