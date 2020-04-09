@@ -142,6 +142,8 @@ def venues():
     }]
   }]
   '''
+
+  # group the result into state and city
   try:
     results = Venue.query.outerjoin(Show, Venue.id == Show.venue_id).order_by(Venue.state, Venue.city).all()
   except:
@@ -149,6 +151,8 @@ def venues():
 
   formatted_result = []
   empty = False
+
+  # get the iterator and loop through it to build the required result
   if results:
     iter_results = iter(results)
     rec = next(iter_results)
@@ -165,6 +169,8 @@ def venues():
         upcoming_show = 0
         for show in rec.show:
           if show.artist:
+
+            # count the upcoming shows 
             if show.start_time > now:
               upcoming_show = upcoming_show + 1
         tmp["venues"].append({
